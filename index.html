@@ -3,178 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Recommendation System</title>
+    <title>Dishcovery — Smart Food Recommendations</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' stroke='%2310b981' stroke-width='8' fill='none' filter='drop-shadow(0px 0px 8px %2310b981)'/></svg>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --teal-primary: #00BFB3;
-            --teal-secondary: #00A3A3;
-            --teal-accent: #00D8D8;
-            --dark-bg: #121212;
-            --card-bg: #1A1A1A;
-            --text-primary: #f0f0f0;
-            --text-secondary: #BBBBBB;
+            --emerald-glow: #10b981;
+            --emerald-dark: #064e3b;
+            --emerald-bg: rgba(16, 185, 129, 0.05);
+            --bg-obsidian: #090a0f;
+            --card-obsidian: #121318;
+            --border-obsidian: #1f2229;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
         }
         
         body {
-            background-color: var(--dark-bg);
+            background-color: var(--bg-obsidian);
             color: var(--text-primary);
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.01em;
         }
         
-        h1, h2, h3, h4, h5 {
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
             color: var(--text-primary);
         }
         
         .page-header {
             position: relative;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.04em;
         }
         
-        .page-header:after {
+        .page-header::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--teal-primary), var(--teal-accent));
+            width: 40px;
+            height: 2px;
+            background: var(--emerald-glow);
+            box-shadow: 0 0 10px var(--emerald-glow);
+        }
+
+        .search-card {
+            background: var(--card-obsidian);
+            border: 1px solid var(--border-obsidian) !important;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.3s ease;
         }
         
+        .search-card:focus-within {
+            border-color: var(--emerald-glow) !important;
+        }
+
         .recipe-card {
             height: 100%;
-            background-color: var(--card-bg);
-            border: none;
-            border-radius: 12px;
+            background-color: var(--card-obsidian);
+            border: 1px solid var(--border-obsidian);
+            border-radius: 16px;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .recipe-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 191, 179, 0.2);
+            transform: translateY(-4px);
+            border-color: var(--emerald-glow);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.15);
         }
         
         .recipe-image {
-            height: 200px;
+            height: 220px;
             object-fit: cover;
+            filter: brightness(0.95);
+            transition: transform 0.5s ease;
+        }
+        
+        .recipe-card:hover .recipe-image {
+            transform: scale(1.03);
         }
         
         .ingredients-list {
-            max-height: 100px;
+            max-height: 120px;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: var(--teal-primary) var(--card-bg);
+            scrollbar-color: var(--emerald-glow) var(--bg-obsidian);
         }
         
         .ingredients-list::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
         
         .ingredients-list::-webkit-scrollbar-thumb {
-            background-color: var(--teal-primary);
-            border-radius: 5px;
+            background-color: var(--emerald-glow);
+            border-radius: 10px;
         }
         
         .ingredients-list::-webkit-scrollbar-track {
-            background-color: var(--card-bg);
+            background-color: var(--bg-obsidian);
         }
         
         .card-body {
-            background-color: var(--card-bg);
-            border-top: 2px solid var(--teal-primary);
+            background-color: var(--card-obsidian);
+            border-top: none !important;
         }
         
         .form-control, .form-select {
-            background-color: rgba(42, 42, 42, 0.8);
-            border: 1px solid var(--teal-secondary);
+            background-color: var(--bg-obsidian);
+            border: 1px solid var(--border-obsidian);
             color: var(--text-primary);
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 12px 16px !important;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
         }
         
         .form-control:focus, .form-select:focus {
-            background-color: rgba(42, 42, 42, 0.9);
-            border-color: var(--teal-accent);
-            box-shadow: 0 0 0 0.25rem rgba(0, 191, 179, 0.25);
+            background-color: var(--bg-obsidian);
+            border-color: var(--emerald-glow);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
             color: var(--text-primary);
         }
         
         .form-control::placeholder {
             color: var(--text-secondary);
+            opacity: 0.6;
         }
         
         .form-select option {
-            background-color: var(--card-bg);
-        }
-        
-        .search-card {
-            background: linear-gradient(145deg, #1A1A1A, #222222);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            border: 1px solid #333;
+            background-color: var(--card-obsidian);
         }
         
         .btn-primary {
-            background: linear-gradient(90deg, var(--teal-primary), var(--teal-secondary));
+            background: var(--emerald-glow);
+            color: var(--bg-obsidian);
             border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            transition: all 0.25s ease;
         }
         
         .btn-primary:hover, .btn-primary:focus {
-            background: linear-gradient(90deg, var(--teal-secondary), var(--teal-primary));
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 191, 179, 0.3);
+            background: #059669;
+            color: var(--bg-obsidian);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
         
         .btn-outline-light {
-            border: 1px solid var(--teal-primary);
-            color: var(--teal-primary);
-            font-weight: 500;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border-obsidian);
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            background: transparent;
         }
         
         .btn-outline-light:hover {
-            background-color: var(--teal-primary);
-            color: var(--dark-bg);
-            border-color: var(--teal-primary);
+            background-color: var(--text-primary);
+            color: var(--bg-obsidian);
+            border-color: var(--text-primary);
         }
         
         .cuisine-tag {
-            background-color: rgba(0, 191, 179, 0.1);
-            color: var(--teal-accent);
-            font-size: 0.8rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
+            background-color: var(--emerald-bg);
+            color: var(--emerald-glow);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.3rem 0.85rem;
+            border-radius: 6px;
             display: inline-block;
-            margin-bottom: 0.5rem;
-            border: 1px solid var(--teal-secondary);
+            margin-bottom: 0.75rem;
+            border: 1px solid rgba(16, 185, 129, 0.15);
         }
         
         .time-tag {
             display: flex;
             align-items: center;
             color: var(--text-secondary);
-            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
         }
         
         .recipe-title {
-            font-weight: 600;
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
             color: var(--text-primary);
+            letter-spacing: -0.02em;
         }
         
         .ingredient-title {
-            color: var(--teal-primary);
-            font-weight: 600;
-            margin-bottom: 0.25rem;
+            color: var(--emerald-glow);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .alert-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-radius: 10px;
         }
     </style>
 </head>
